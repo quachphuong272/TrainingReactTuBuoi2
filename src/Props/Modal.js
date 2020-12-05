@@ -1,6 +1,14 @@
 import React, { Component } from 'react'
 
 export default class Modal extends Component {
+
+    tinhTongTien =() =>{
+        let tongTien = this.props.cart.reduce((tt, spGH, index)=> {
+            return tt += spGH.soLuong*spGH.giaBan;
+        },0)
+        return tongTien.toLocaleString();
+    }
+
     render() {
         return (
             <div>
@@ -29,12 +37,21 @@ export default class Modal extends Component {
                                                 <td>{product.maSP}</td>
                                                 <td><img src={product.hinhAnh} width="30" height="30"/></td>
                                                 <td>{product.tenSP}</td>
-                                                <td>{product.soLuong}</td>
-                                                <td>{product.giaBan}</td>
-                                                <td>{product.soLuong*product.giaBan}</td>
+                                                <td><button onClick={()=>{this.props.tangGiamSoLuong(product.maSP, -1)}}>-</button>{product.soLuong}<button onClick={()=>{this.props.tangGiamSoLuong(product.maSP,1)}}>+</button></td>
+                                                <td>{product.giaBan.toLocaleString()}</td>
+                                                <td>{(product.soLuong*product.giaBan).toLocaleString()}</td>
+                                                <td><button className="btn btn-danger" onClick={()=> {
+                                                    // Nhận sự kiện delete item thông qua props tên deleteItem
+                                                    this.props.deleteItem(product.maSP)
+                                                }}>Xóa</button></td>
                                             </tr>
                                         )
                                     })}
+                                    <tr>
+                                        <td colSpan="5"></td>
+                                        <td>Tổng tiền</td>
+                                        <td>{this.tinhTongTien()}</td>
+                                    </tr>
                                 </table>
                             </div>
                         </div>

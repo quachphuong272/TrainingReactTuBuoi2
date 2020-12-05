@@ -57,13 +57,45 @@ export default class ProductList extends Component {
         }
     }
 
+    // Định nghĩa sự kiện xóa sản phẩm tại nơi chứa state giỏ hàng
+    deleteItem = (maSP) => {
+        // tạo ra 1 giỏ hàng mới giống giá trị giỏ hàng cũ
+        let gioHangCapNhat = [... this.state.cart];
+        // xử lý xóa trên giỏ hàng mới
+        let index = gioHangCapNhat.findIndex(spGH => spGH.maSP === maSP);
+        if (index !== -1)
+        {
+            gioHangCapNhat.splice(index,1);
+        }
+        // gán lại giỏ hãng cũ bằng giỏ hàng mới
+        this.setState({
+            cart:gioHangCapNhat
+        })
+    }
+
+    // Định nghĩa hàm thay đổi số lượng tại nơi chứa state số lượng ( số lượng nằm trong cart[] )
+    tangGiamSoLuong = (maSP, soLuong) => {
+        let gioHangCapNhat = [...this.state.cart];
+
+        // Tìm trong giỏ hàng có sản phẩm == với sản phẩm được click + hoặc -
+        let spGioHang = gioHangCapNhat.find(spGH => spGH.maSP === maSP);
+        // tìm thấy sp trong giỏ hàng
+        if(spGioHang)
+        {
+            spGioHang.soLuong += soLuong;
+        }
+        // cập nhật lại giỏ hàng
+        this.setState({cart:gioHangCapNhat});
+
+    }
+
     render() {
         const { productDetail, cart } = this.state;
         
 
         return (
             <div className="container">
-                <Modal cart={cart} />
+                <Modal cart={cart} deleteItem={this.deleteItem} tangGiamSoLuong={this.tangGiamSoLuong}/>
                 <div className="row">
                     {this.renderProductListHandle()}
                 </div>
